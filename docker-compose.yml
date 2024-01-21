@@ -4,7 +4,7 @@ services:
   stringer-setup:
     image: stringerrss/stringer:latest
     container_name: stringer-setup
-    restart: no
+    restart: "no"
     env_file: .env
     volumes:
       - ./.env:/app/.env
@@ -21,7 +21,7 @@ services:
     networks:
       - stringer-network
     volumes:
-      - ~/stringer:/var/lib/postgresql/data
+      - ~/stringer-postgres-data:/var/lib/postgresql/data
     env_file: .env
 
   stringer:
@@ -35,7 +35,7 @@ services:
         condition: service_completed_successfully
     restart: always
     ports:
-      - 80:8080
+      - 3001:8080
     networks:
       - stringer-network
     env_file: .env
