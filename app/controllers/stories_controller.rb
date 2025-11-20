@@ -1,32 +1,33 @@
-require_relative "../repositories/story_repository"
-require_relative "../commands/stories/mark_all_as_read"
+# frozen_string_literal: true
 
-class Stringer < Sinatra::Base
-  get "/news" do
-    @unread_stories = StoryRepository.unread
-
-    erb :index
+class StoriesController < ApplicationController
+  def index
+    order = current_user.stories_order
+    @unread_stories = authorization.scope(StoryRepository.unread(order:))
   end
 
-  get "/archive" do
-    @read_stories = StoryRepository.read(params[:page])
-
-    erb :archive
-  end
-
-  put "/stories/:id" do
+  def update
     json_params = JSON.parse(request.body.read, symbolize_names: true)
-    
-    story = StoryRepository.fetch(params[:id])
-    story.is_read = !!json_params[:is_read]
-    story.keep_unread = !!json_params[:keep_unread]
-    
-    StoryRepository.save(story)
+
+    story = authorization.check(StoryRepository.fetch(params[:id]))
+    story.update!(json_params.slice(:is_read, :is_starred, :keep_unread))
+
+    head(:no_content)
   end
 
-  post "/mark_all_as_read" do
-    MarkAllAsRead.new(params[:story_ids]).mark_as_read
-    
-    redirect to("/news")
+  def mark_all_as_read
+    stories = authorization.scope(Story.where(id: params[:story_ids]))
+    MarkAllAsRead.call(stories.ids)
+
+    redirect_to("/news")
+  end
+
+  def archived
+    @read_stories = authorization.scope(StoryRepository.read(params[:page]))
+  end
+
+  def starred
+    @starred_stories =
+      authorization.scope(StoryRepository.starred(params[:page]))
   end
 end

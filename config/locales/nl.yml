@@ -21,18 +21,27 @@ nl:
     - dec
   feeds:
     add:
-      description: Plak de URL van de feed die je wilt lezen.
+      description: Plak de URL van de blog die je wilt lezen.
       fields:
         feed_url: Feed-URL
         submit: Toevoegen
-      flash:
-        added_successfully: We hebben je nieuwe feed toegevoegd, kijk over een tijdje nog eens.
-        already_subscribed_error: Je bent al geabonneerd op deze feed...
-        feed_not_found_error: Die feed konden we niet vinden. Probeer het opnieuw.
       title: Nieuwe artikelen nodig?
+    create:
+      success: We hebben je nieuwe feed toegevoegd. Kijk over een tijdje nog eens.
+      already_subscribed: Je bent al geabonneerd op deze feed...
+      feed_not_found: Die feed konden we niet vinden. Probeer het opnieuw.
+    edit:
+      fields:
+        feed_name: Feednaam
+        feed_url: Feed-URL
+        submit: Opslaan
+      flash:
+        updated_successfully: De feed is voor je bijgewerkt!
     index:
       add: toevoegen
       add_some_feeds: Hé, je zou eens wat feeds kunnen %{add}.
+    destroy:
+      success: Voer verwijderd.
   first_run:
     password:
       anti_social: anti-sociaal
@@ -43,32 +52,33 @@ nl:
         password_confirmation: Bevestigen
       flash:
         passwords_dont_match: Hé, je wachtwoordbevestiging kwam niet overeen. Probeer het opnieuw.
-      subtitle: ! 'Er is maar één gebruiker: jij.'
+      subtitle: 'Er is maar één gebruiker: jij.'
       title: Stringer is
   flash:
-    cookies_required: ! 'Wel, dit is vervelend: deze applicatie heeft cookies nodig om goed te werken.'
-    js_required: ! 'Wel, dit is vervelend: deze applicatie heeft Javascript nodig om goed te werken.'
+    cookies_required: 'Wel, dit is vervelend: deze applicatie heeft cookies nodig om goed te werken.'
+    js_required: 'Wel, dit is vervelend: deze applicatie heeft Javascript nodig om goed te werken.'
   import:
-    description: ! '%{link} je feeds uit Google Reader en importeer ze.'
-    export: Exporteer
+    description: Importeer uw feeds van een andere service.
     fields:
       import: Importeren
       not_now: Niet nu
     subtitle: Laten we je feeds instellen.
     title: Welkom aan boord.
   layout:
-    back_to_work: Aan het werk, luilak!
+    back_to_work: Ga weer aan het werk, luilak!
     export: Exporteren
     hey: Hé!
+    import: Importeren
     logout: Uitloggen
-    support: Hulp
+    support: Ondersteuning
     title: stringer | jouw rss-buddy
   partials:
     action_bar:
-      add_feed: Feed toevoegen
+      add_feed: Een feed toevoegen
       archived_stories: Gearchiveerde artikelen
       mark_all: Alles als gelezen markeren
       refresh: Vernieuwen
+      starred_stories: Artikelen met ster
       view_feeds: Feeds bekijken
     feed:
       last_fetched:
@@ -76,23 +86,29 @@ nl:
       last_updated: Laatst bijgewerkt op
       status_bubble:
         green: Succes!
-        red: Fout bij inlezen (en het heeft ook nog nooit gewerkt)
+        red: Fout bij inlezen (en dat is ook nog niet eerder gelukt)
         yellow: Fout bij inlezen (waarschijnlijk tijdelijk)
     feed_action_bar:
       add_feed: Feed toevoegen
       archived_stories: Gearchiveerde artikelen
       feeds: Feeds bekijken
       home: Terug naar artikelen
+      starred_stories: Artikelen met ster
     shortcuts:
       keys:
+        a: Een feed toevoegen
+        bv: Open de URL van het artikel
+        f: Naar de feeds-pagina
         jk: Volgend/vorig artikel
+        left: Vorige pagina
         m: Artikel markeren als gelezen/ongelezen
         np: Naar beneden/boven verplaaten
         oenter: Artikel open-/dichtklappen
         or: of
         r: Vernieuwen
+        right: Volgende pagina
+        s: Artikel markeren met ster/zonder ster
         shifta: Alles als gelezen markeren
-        v: Open de URL van het artikel
       title: Sneltoetsen
     zen:
       archive: alle artikelen bekijken
@@ -112,22 +128,30 @@ nl:
       rss: RSS
       subtitle: Welkom terug, vriend.
       title: Stringer spreekt
+  starred:
+    next: Volgende
+    of: van
+    previous: Vorige
+    sorry: Sorry, je hebt nog geen artikelen met ster!
   stories:
     keep_unread: Behouden als ongelezen
   time:
     formats:
-      default: ! '%d %b, %H:%M'
+      default: '%d %b, %H:%M'
   tutorial:
     add_feed: feeds toevoegen
     as_read: als gelezen markeren
     click_to_read: (klik om te lezen)
     description: We zijn je artikelen aan het ophalen, geef ons even.
+    heroku_hourly_task: Om nieuwe artikelen binnen te halen is het nodig dat je een taak instelt die elk uur uitgevoerd wordt.
+    heroku_one_more_thing: Nog een ding...
+    heroku_scheduler: Ga naar de Heroku Scheduler en voeg deze taak toe
     mark_all: alles
     ready: Okay, klaar!
     refresh: vernieuwen
     simple: simpel
     start: Je kunt beginnen met lezen
     subtitle: Hier is de handleiding.
-    title: ! 'Stringer is '
+    title: 'Stringer is '
     your_feeds: je feeds
     your_stories: je artikelen

@@ -1,23 +1,25 @@
-require "feedbag"
-require "feedzirra"
+# frozen_string_literal: true
 
-class FeedDiscovery
-  def discover(url, finder = Feedbag, parser = Feedzirra::Feed)
-    get_feed_for_url(url, finder, parser) do
-      urls = finder.find(url)
-      return false if urls.empty?
+module FeedDiscovery
+  class << self
+    def call(url)
+      get_feed_for_url(url) do
+        urls = Feedbag.find(url)
+        return false if urls.empty?
 
-      get_feed_for_url(urls.first, finder, parser) do
-        return false
+        get_feed_for_url(urls.first) { return false }
       end
     end
-  end
 
-  def get_feed_for_url(url, finder, parser)
-    feed = parser.fetch_and_parse(url)
-    feed.feed_url ||= url
-    feed
-  rescue Exception
-    yield if block_given?
+    private
+
+    def get_feed_for_url(url)
+      response = HTTParty.get(url).to_s
+      feed = Feedjira.parse(response)
+      feed.feed_url ||= url
+      feed
+    rescue StandardError
+      yield
+    end
   end
 end

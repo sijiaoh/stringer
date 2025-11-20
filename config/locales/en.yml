@@ -25,14 +25,24 @@ en:
       fields:
         feed_url: Feed URL
         submit: Add
-      flash:
-        added_successfully: We've added your new feed. Check back in a bit.
-        already_subscribed_error: You are already subscribed to this feed...
-        feed_not_found_error: We couldn't find that feed. Try again.
       title: Need new stories?
+    create:
+      success: We've added your new feed. Check back in a bit.
+      already_subscribed: You are already subscribed to this feed...
+      feed_not_found: We couldn't find that feed. Try again.
+    edit:
+      fields:
+        feed_name: Feed Name
+        feed_url: Feed URL
+        group: Group
+        submit: Save
+      flash:
+        updated_successfully: Updated the feed for ya'!
     index:
       add: add
       add_some_feeds: Hey, you should %{add} some feeds.
+    destroy:
+      success: Feed deleted.
   first_run:
     password:
       anti_social: anti-social
@@ -43,24 +53,26 @@ en:
         password_confirmation: Confirm
       flash:
         passwords_dont_match: Hey, your password confirmation didn't match. Try again.
-      subtitle: ! 'There is only one user: you.'
+      subtitle: 'There is only one user: you.'
       title: Stringer is
   flash:
     cookies_required: Well, this is awkward. Cookies are required for the app to work properly.
     js_required: Well, this is awkward. Javascript is required for the app to work properly.
   import:
-    description: ! '%{link} your feeds from Google Reader and import them.'
-    export: Export
+    description: Import your feeds from another service.
     fields:
       import: Import
       not_now: Not now
     subtitle: Let's setup your feeds.
     title: Welcome aboard.
   layout:
+    admin_settings: Admin Settings
     back_to_work: Get back to work, slacker!
     export: Export
     hey: Hey!
+    import: Import
     logout: Logout
+    profile: Profile
     support: Support
     title: stringer | your rss buddy
   partials:
@@ -69,6 +81,7 @@ en:
       archived_stories: Archived stories
       mark_all: Mark all as read
       refresh: Refresh
+      starred_stories: Starred stories
       view_feeds: View feeds
     feed:
       last_fetched:
@@ -83,51 +96,101 @@ en:
       archived_stories: Archived stories
       feeds: View feeds
       home: Return to Stories
+      starred_stories: Starred stories
     shortcuts:
       keys:
+        a: Add a feed
+        bv: Go to story URL
+        f: Go to feeds page
         jk: Next/previous story
+        left: Previous page
         m: Mark item as read/unread
         np: Move down/move up
         oenter: Toggle story open/closed
         or: or
         r: Refresh
+        right: Next page
+        s: Mark item as starred/unstarred
         shifta: Mark all as read
-        v: Go to story URL
       title: Keyboard shortcuts
     zen:
       archive: view all items
       go_make: go make something
       gtfo: Now stop reading blogs and
-      rss_zero: You've reached RSS Zero&trade;
+      rss_zero: You've reached RSS Zero™
+  passwords:
+    update:
+      success: Password updated
+      failure: 'Unable to update password: %{errors}'
+  profiles:
+    edit:
+      title: Edit profile
+      warning_html:
+        <strong>Warning!!!</strong> Editing your username or password will
+        change your API key as well. You will need to update your credentials
+        in any Fever clients you have connected to Stringer.
+    update:
+      success: Profile updated
+      failure: 'Unable to update profile: %{errors}'
   sessions:
     destroy:
       flash:
         logged_out_successfully: You have been signed out!
     new:
       fields:
+        unknown_username_html:
+          <strong>Note:</strong> if you didn't set a username when you set up
+          your stringer instance, then your username will be "stringer". You
+          can change this on your profile page after logging in.
+        username: Username
         password: Password
         submit: Login
       flash:
         wrong_password: That's the wrong password. Try again.
       rss: RSS
+      sign_up_html: Or <a href=%{href}>sign up</a>.
       subtitle: Welcome back, friend.
       title: Stringer speaks
+  settings:
+    index:
+      heading: Application Settings
+      description: Edit application wide settings
+      signup:
+        enabled: User signups are enabled
+        disabled: User signups are disabled
+        enable: Enable
+        disable: Disable
+  starred:
+    next: Next
+    of: of
+    previous: Previous
+    sorry: Sorry, you haven't starred any stories yet!
   stories:
     keep_unread: Keep unread
   time:
     formats:
-      default: ! '%b %d, %H:%M'
+      default: '%b %d, %H:%M'
   tutorial:
     add_feed: add feed
     as_read: as read
     click_to_read: (click to read)
     description: We're getting you some stories to read, give us a second.
+    heroku_hourly_task: You need to add an hourly task to check for new stories.
+    heroku_one_more_thing: One more thing...
+    heroku_scheduler: Go to the Heroku Scheduler and add this task
     mark_all: mark all
     ready: Okay, it's ready!
     refresh: refresh
     simple: simple
     start: Start Reading
     subtitle: Here's the instruction manual.
-    title: ! 'Stringer is '
+    title: 'Stringer is '
     your_feeds: your feeds
     your_stories: your stories
+  activerecord:
+    attributes:
+      user:
+        stories_order: "Stories feed order"
+      user/stories_order:
+        asc: "Oldest first"
+        desc: "Newest first"

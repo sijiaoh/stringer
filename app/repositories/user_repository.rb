@@ -1,14 +1,14 @@
-require_relative "../models/user"
+# frozen_string_literal: true
 
 class UserRepository
   def self.fetch(id)
     return nil unless id
-    
+
     User.find(id)
   end
 
   def self.setup_complete?
-    User.any? && User.first.setup_complete?
+    User.any?
   end
 
   def self.save(user)

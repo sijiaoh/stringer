@@ -1,32 +1,40 @@
-class Feed < ActiveRecord::Base
-  has_many :stories, order: "published desc", dependent: :delete_all
+# frozen_string_literal: true
 
-  validates_uniqueness_of :url
+class Feed < ApplicationRecord
+  has_many :stories, -> { order(published: :desc) }, dependent: :delete_all
+  has_many :unread_stories, -> { unread }, class_name: "Story"
+  belongs_to :group
+  belongs_to :user
 
-  STATUS = { green: 0, yellow: 1, red: 2 }
+  delegate :name, to: :group, prefix: true, allow_nil: true
 
-  def status
-    STATUS.key(read_attribute(:status))
-  end
+  validates :url, presence: true, uniqueness: { scope: :user_id }
+  validates :user_id, presence: true
 
-  def status=(s)
-    write_attribute(:status, STATUS[s])
-  end
+  enum :status, { green: 0, yellow: 1, red: 2 }
+
+  scope :with_unread_stories_counts,
+        lambda {
+          left_joins(:unread_stories)
+            .select("feeds.*, count(stories.id) as unread_stories_count")
+            .group("feeds.id")
+        }
 
   def status_bubble
-    return :yellow if status == :red && stories.any?
+    return "yellow" if status == "red" && stories.any?
+
     status
   end
 
   def as_fever_json
     {
-      id: self.id,
+      id:,
       favicon_id: 0,
-      title: self.name,
-      url: self.url,
-      site_url: self.url,
+      title: name || "",
+      url:,
+      site_url: url,
       is_spark: 0,
-      last_updated_on_time: self.last_fetched.to_i
+      last_updated_on_time: last_fetched.to_i
     }
   end
 end

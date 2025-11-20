@@ -1,69 +1,48 @@
-##Stringer
-[![Build Status](https://travis-ci.org/swanson/stringer.png)](https://travis-ci.org/swanson/stringer)
-[![Code Climate](https://codeclimate.com/github/swanson/stringer.png)](https://codeclimate.com/github/swanson/stringer)
-[![Coverage Status](https://coveralls.io/repos/swanson/stringer/badge.png?branch=master)](https://coveralls.io/r/swanson/stringer)
+# Stringer
 
-### A [work-in-progress] self-hosted, anti-social RSS reader.
+[![CircleCI](https://circleci.com/gh/stringer-rss/stringer/tree/main.svg?style=svg)](https://circleci.com/gh/stringer-rss/stringer/tree/main)
+[![Code Climate](https://api.codeclimate.com/v1/badges/899c5407c870e541af4e/maintainability)](https://codeclimate.com/github/stringer-rss/stringer/maintainability)
+[![Coverage Status](https://coveralls.io/repos/github/stringer-rss/stringer/badge.svg?branch=main)](https://coveralls.io/github/stringer-rss/stringer?branch=main)
+[![GitHub Sponsors](https://img.shields.io/github/sponsors/mockdeep?logo=github)](https://github.com/sponsors/mockdeep)
 
-Stringer has no external dependencies, no social recommendations/sharing, and no fancy machine learning algorithms. 
+### A self-hosted, anti-social RSS reader.
 
-But it does have keyboard shortcuts (hit `?` from within the app) and was made with love!
+Stringer has no external dependencies, no social recommendations/sharing, and no fancy machine learning algorithms.
 
-When `BIG_FREE_READER` shuts down, your instance of Stringer will still be kicking.
+But it does have keyboard shortcuts and was made with love!
 
 ![](screenshots/instructions.png)
 ![](screenshots/stories.png)
 ![](screenshots/feed.png)
 
-The app is currently under active development, please try it out and report any issues you have.
+## Installation
 
-# Installation
+Stringer is a Ruby app based on Rails, PostgreSQL, Backbone.js and GoodJob.
 
-Stringer is a Ruby app based on Sinatra, ActiveRecord, PostgreSQL, Backbone.js and DelayedJob.
+[![Deploy to Heroku](https://cdn.herokuapp.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/stringer-rss/stringer)
 
-Instructions are provided for deploying to Heroku (runs fine on the free plan) but Stringer can be deployed anywhere that supports Ruby.
+Stringer will run just fine on the Eco/Basic Heroku plans.
 
-```sh
-git clone git://github.com/swanson/stringer.git
-cd stringer
-heroku create
-git push heroku master
+Instructions are provided for deploying to [Heroku manually](/docs/Heroku.md), to any Ruby 
+compatible [Linux-based VPS](/docs/VPS.md), to [Docker](docs/Docker.md) and to [OpenShift](/docs/OpenShift.md).
 
-heroku config:set SECRET_TOKEN=`openssl rand -hex 20`
+## Niceties
 
-heroku run rake db:migrate
-heroku restart
+### Keyboard Shortcuts
 
-heroku addons:add scheduler
-heroku addons:open scheduler
-```
+You can access the keyboard shortcuts when using the app by hitting `?`.
 
-Add an hourly task that runs `rake fetch_feeds`
+![](screenshots/keyboard_shortcuts.png)
 
-Load the app and follow the instructions to import your feeds and start using the app.
-
----
-
-In the event that you need to change your password, run `heroku run rake change_password`  from the app folder.
-
-## Updating the app
-
-From the app's directory:
-
-```sh
-git pull
-git push heroku master
-heroku run rake db:migrate
-heroku restart
-```
-
-# Niceties
+### Using your own domain with Heroku
 
 You can run Stringer at `http://reader.yourdomain.com` using a CNAME.
 
 If you are on Heroku:
 
-`heroku domains:add reader.yourdomain.com`
+```
+heroku domains:add reader.yourdomain.com
+```
 
 Go to your registrar and add a CNAME:
 ```
@@ -74,9 +53,7 @@ Target: your-heroku-instance.herokuapp.com
 
 Wait a few minutes for changes to propagate.
 
----
-
-ReederApp Support (experimental)
+### Fever API
 
 Stringer implements a clone of [Fever's API](http://www.feedafever.com/api) so it can be used with any mobile client that supports Fever.
 
@@ -91,9 +68,7 @@ Email: stringer (case-sensitive)
 Password: {your-stringer-password}
 ```
 
-Currently, only reading is supported and this is kind of a hack so please report any issues you run into. If you have previously setup Stringer, you will need to migrate your database and run `rake change_password` for the API key to be setup properly.
-
----
+### Translations
 
 Stringer has been translated to [several other languages](config/locales). Your language can be set with the `LOCALE` environment variable.
 
@@ -101,31 +76,57 @@ To set your locale on Heroku, run `heroku config:set LOCALE=en`.
 
 If you would like to translate Stringer to your preferred language, please use [LocaleApp](http://www.localeapp.com/projects/4637).
 
-# Development
+### Clean up old read stories on Heroku
 
-Run the tests with `rspec`.
+You can clean up old stories by running: `rake cleanup_old_stories`
 
-In development, stringer uses `sqlite` - there are issues with locking if you run background jobs at the same time as queries are being made via the web app. If you run into these, consider using `pg` locally.
+By default, this removes read stories that are more than 30 days old (that
+are not starred). You can either run this manually or add it as a scheduled
+task.
 
-## Getting Started
+## Development
 
-To get started using Stringer locally simply run the following:
+Run the Ruby tests with `rspec`.
+
+Run the Javascript tests with `rake test_js` and then open a browser to `http://localhost:4567/test`.
+
+### Getting Started
+
+To get started using Stringer for development you first need to install `foreman`.
+
+    gem install foreman
+
+Then run the following commands.
 
 ```sh
 bundle install
-rake db:migrate
+rails db:setup
 foreman start
 ```
 
-The application will be running on port `5000`
+The application will be running on port `5000`.
 
-You can launch an interactive console (ala `rails c`) using `racksh`
+You can launch an interactive console (a la `rails c`) using `rake console`.
 
-# Acknowledgements
-Most of the heavy-lifting is done by [`feedzirra`](https://github.com/pauldix/feedzirra) and [`feedbag`](https://github.com/dwillis/feedbag).
+## Acknowledgments
+
+Most of the heavy-lifting is done by [`feedjira`](https://github.com/feedjira/feedjira) and [`feedbag`](https://github.com/dwillis/feedbag).
 
 General sexiness courtesy of [`Twitter Bootstrap`](http://twitter.github.io/bootstrap/) and [`Flat UI`](http://designmodo.github.io/Flat-UI/).
 
-# Contact
-Matt Swanson, [mdswanson.com](http://mdswanson.com) [@_swanson](http://twitter.com/_swanson)
+ReenieBeanie Font Copyright &copy; 2010 Typeco (james@typeco.com). Licensed under [SIL Open Font License, 1.1](http://scripts.sil.org/OFL).
 
+Lato Font Copyright &copy; 2010-2011 by tyPoland Lukasz Dziedzic (team@latofonts.com). Licensed under [SIL Open Font License, 1.1](http://scripts.sil.org/OFL).
+
+## Contact
+
+If you have a question, feature idea, or are running into problems, our preferred method of contact is to open an issue on GitHub. This allows multiple people to weigh in, and we can keep everything in one place. Thanks!
+
+## Maintainers
+
+Robert Fletcher [boon.gl](https://boon.gl)
+
+## Alumni
+
+Matt Swanson (creator), [mdswanson.com](http://mdswanson.com), [@_swanson](http://twitter.com/_swanson)
+Victor Koronen, [victor.koronen.se](http://victor.koronen.se/), [@victorkoronen](https://twitter.com/victorkoronen)

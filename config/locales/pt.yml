@@ -25,14 +25,23 @@ pt:
       fields:
         feed_url: URL da Feed
         submit: Adicionar
-      flash:
-        added_successfully: Adicionamos a sua nova feed. Verifique novamente mais tarde.
-        already_subscribed_error: Você já subscreveu esta feed...
-        feed_not_found_error: Não foi possível encontrar a feed. Tente novamente.
       title: Precisa de novas histórias?
+    create:
+      success: Adicionamos a sua nova feed. Verifique novamente mais tarde.
+      already_subscribed: Você já subscreveu esta feed...
+      feed_not_found: Não foi possível encontrar a feed. Tente novamente.
+    edit:
+      fields:
+        feed_name: 
+        feed_url: 
+        submit: 
+      flash:
+        updated_successfully: 
     index:
       add: adicionar
       add_some_feeds: Ei, você deveria %{add} algumas feeds.
+    destroy:
+      success:
   first_run:
     password:
       anti_social: anti-social
@@ -43,14 +52,13 @@ pt:
         password_confirmation: Confirmar
       flash:
         passwords_dont_match: Ei, a password de confirmação não está correcta. Tente novamente.
-      subtitle: ! 'Existe apenas um utilizador: você.'
+      subtitle: 'Existe apenas um utilizador: você.'
       title: Stringer é
   flash:
     cookies_required: 
     js_required: 
   import:
-    description: ! '%{link} as suas feeds do Google Reader e importe-as.'
-    export: Exportar
+    description: Importe seus feeds de outro serviço.
     fields:
       import: Importar
       not_now: Agora não
@@ -60,6 +68,7 @@ pt:
     back_to_work: Volte ao trabalho, preguiçoso!
     export: Exportar
     hey: Ei!
+    import: 
     logout: Sair
     support: Suporte
     title: stringer | o seu amigo rss
@@ -69,6 +78,7 @@ pt:
       archived_stories: Arquivo de histórias
       mark_all: Marcar tudo como lido
       refresh: Atualizar
+      starred_stories: Favoritas histórias
       view_feeds: Visualizar feeds
     feed:
       last_fetched:
@@ -83,16 +93,22 @@ pt:
       archived_stories: Arquivo de histórias
       feeds: Visualizar feeds
       home: Voltar para as histórias
+      starred_stories: Favoritas histórias
     shortcuts:
       keys:
+        a: 
+        bv: Ir para a URL da história
+        f: 
         jk: Próxima história/História anterior
+        left: 
         m: Marcar item como lido/não lido
         np: Mover para baixo/Mover para cima
         oenter: Alternar como história aberta/fechada
         or: ou
         r: Atualizar
+        right: 
+        s: 
         shifta: Marcar tudo como lido
-        v: Ir para a URL da história
       title: Atalhos do teclado
     zen:
       archive: visualizar todos os itens
@@ -112,22 +128,30 @@ pt:
       rss: RSS
       subtitle: Bem vindo novamente, amigo.
       title: Stringer fala
+  starred:
+    next: 
+    of: 
+    previous: 
+    sorry: 
   stories:
     keep_unread: Continuar como não lido
   time:
     formats:
-      default: ! '%d de %b, %H:%M'
+      default: '%d de %b, %H:%M'
   tutorial:
     add_feed: adicionar feed
     as_read: como lido
     click_to_read: (clique para ler)
     description: Estamos a actualizar as suas histórias, dê-nos um segundo.
+    heroku_hourly_task: 
+    heroku_one_more_thing: 
+    heroku_scheduler: 
     mark_all: marcar todos
     ready: Ok, está pronto!
     refresh: atualizar
     simple: simples
     start: Começar a ler
     subtitle: Aqui está o manual de instruções.
-    title: ! 'Stringer é '
+    title: 'Stringer é '
     your_feeds: as seus feeds
     your_stories: as suas histórias

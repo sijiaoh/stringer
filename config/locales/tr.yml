@@ -25,14 +25,23 @@ tr:
       fields:
         feed_url: Besleme URL'si
         submit: Ekle
-      flash:
-        added_successfully: Yeni besleme eklenmistir. Sonra kontrol edin.
-        already_subscribed_error: Bu beslemeye zaten kayitlisiniz...
-        feed_not_found_error: Bu beslemeyi bulamadik. Tekrar deneyiniz.
       title: Yeni hikayelere mi ihtiyaciniz var?
+    create:
+      success: Yeni besleme eklenmistir. Sonra kontrol edin.
+      already_subscribed: Bu beslemeye zaten kayitlisiniz...
+      feed_not_found: Bu beslemeyi bulamadik. Tekrar deneyiniz.
+    edit:
+      fields:
+        feed_name: 
+        feed_url: 
+        submit: 
+      flash:
+        updated_successfully: 
     index:
       add: ekle
       add_some_feeds: Hey, you should %{add} some feeds.
+    destroy:
+      success: Besleme silindi.
   first_run:
     password:
       anti_social: anti-social
@@ -43,14 +52,13 @@ tr:
         password_confirmation: Tekrar
       flash:
         passwords_dont_match: Sifrelerin tekrari farkli. Tekrardan dene.
-      subtitle: ! 'Sadece bir kullanici var: Sen!'
+      subtitle: 'Sadece bir kullanici var: Sen!'
       title: Stringer is
   flash:
     cookies_required: Aaa, garip!. Uygulamanin duzgun calismasi icin Cookies gerekli.
     js_required: Aaa, garip. Uygulamanin duzgun calismasi icin Javascript gerekli.
   import:
-    description: 
-    export: Disa Aktar
+    description: Beslemelerinizi başka bir hizmetten içe aktarın.
     fields:
       import: Ekle
       not_now: Simdi Degil
@@ -60,6 +68,7 @@ tr:
     back_to_work: Hadi isine geri don!
     export: Disa Aktar
     hey: Hey!
+    import: 
     logout: Cikis Yap
     support: Destekle
     title: stringer | rss kankan
@@ -69,6 +78,7 @@ tr:
       archived_stories: Arsivlenen hikayeler
       mark_all: Hepsini okunmus olarak isaretle
       refresh: Yenile
+      starred_stories: 
       view_feeds: Beslemeleri Goruntule
     feed:
       last_fetched:
@@ -83,16 +93,22 @@ tr:
       archived_stories: Arsivlenmis hikayeler
       feeds: Beslemeleri Goruntule
       home: Hikayelere geri don
+      starred_stories: 
     shortcuts:
       keys:
+        a: 
+        bv: Hikaye URL'sine git
+        f: 
         jk: Sonraki/onceki hikaye
+        left: 
         m: Okundu/okunmadi olarak isaretle
         np: Asagi/yukari hareket et
         oenter: Hikayeyi ac/kapa
         or: yada
         r: Yenile
+        right: 
+        s: 
         shifta: Hepsini okundu olarak isaretle
-        v: Hikaye URL'sine git
       title: Klavye kisayollari
     zen:
       archive: butun hikayeleri goster
@@ -112,22 +128,30 @@ tr:
       rss: RSS
       subtitle: Tekrar hosgeldin, dostum.
       title: Stringer diyoki
+  starred:
+    next: 
+    of: 
+    previous: 
+    sorry: 
   stories:
     keep_unread: Okunmadi olarak tut
   time:
     formats:
-      default: ! '%b %d, %H:%M'
+      default: '%b %d, %H:%M'
   tutorial:
     add_feed: feed ekle
     as_read: okundu olarak
     click_to_read: (okumak icin tikla)
     description: Sana okuman icin hikayeler getirecegiz, bize biraz zaman ver.
+    heroku_hourly_task: 
+    heroku_one_more_thing: 
+    heroku_scheduler: 
     mark_all: hepsini isaretle
     ready: Tamam hazir!
     refresh: yenile
     simple: basit
     start: Okumaya basla
     subtitle: Iste kullanma klavuzu.
-    title: ! 'Stringer '
+    title: 'Stringer '
     your_feeds: beslemeleriniz
     your_stories: hikayeleriniz

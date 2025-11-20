@@ -1,14 +1,21 @@
-require_relative "../models/story"
-require_relative "../utils/sample_story"
+# frozen_string_literal: true
 
 class StoryRepository
+  extend UrlHelpers
+
   def self.add(entry, feed)
-    Story.create(feed: feed, 
-                title: entry.title, 
-                permalink: entry.url,
-                body: extract_content(entry),
-                is_read: false,
-                published: entry.published || Time.now)
+    enclosure_url = entry.enclosure_url if entry.respond_to?(:enclosure_url)
+    Story.create(
+      feed:,
+      title: extract_title(entry),
+      permalink: extract_url(entry, feed),
+      enclosure_url:,
+      body: extract_content(entry),
+      is_read: false,
+      is_starred: false,
+      published: entry.published || Time.now,
+      entry_id: entry.id
+    )
   end
 
   def self.fetch(id)
@@ -23,54 +30,98 @@ class StoryRepository
     Story.where(id: ids).where(keep_unread: false)
   end
 
-  def self.save(story)
-    story.save
+  def self.fetch_unread_by_timestamp(timestamp)
+    timestamp = Time.at(timestamp.to_i)
+    Story.where(stories: { created_at: ...timestamp }).where(is_read: false)
   end
 
-  def self.unread
-    Story.where(is_read: false).order("published desc") 
+  def self.fetch_unread_by_timestamp_and_group(timestamp, group_id)
+    fetch_unread_by_timestamp(timestamp)
+      .joins(:feed).where(feeds: { group_id: })
+  end
+
+  def self.fetch_unread_for_feed_by_timestamp(feed_id, timestamp)
+    timestamp = Time.at(timestamp.to_i)
+    Story
+      .where(feed_id:)
+      .where("created_at < ? AND is_read = ?", timestamp, false)
+  end
+
+  def self.exists?(id, feed_id)
+    Story.exists?(entry_id: id, feed_id:)
+  end
+
+  def self.unread(order: "desc")
+    Story.where(is_read: false).order("published #{order}").includes(:feed)
+  end
+
+  def self.unread_since_id(since_id)
+    unread.where(Story.arel_table[:id].gt(since_id))
+  end
+
+  def self.feed(feed_id)
+    Story.where(feed_id:).order(published: :desc).includes(:feed)
   end
 
   def self.read(page = 1)
-    Story.where(is_read: true).order("published desc").page(page).per_page(15)
+    Story.where(is_read: true).includes(:feed)
+         .order(published: :desc).page(page).per_page(20)
+  end
+
+  def self.starred(page = 1)
+    Story.where(is_starred: true).includes(:feed)
+         .order(published: :desc).page(page).per_page(20)
+  end
+
+  def self.all_starred
+    Story.where(is_starred: true).order(published: :desc)
+  end
+
+  def self.unstarred_read_stories_older_than(num_days)
+    Story.where(is_read: true, is_starred: false)
+         .where(published: ..num_days.days.ago)
   end
 
   def self.read_count
     Story.where(is_read: true).count
   end
 
-  def self.extract_content(entry)
-    sanitized_content = ""
-    
-    if entry.content
-      sanitized_content = entry.content.sanitize
-    elsif entry.summary
-      sanitized_content = entry.summary.sanitize
-    end
+  def self.extract_url(entry, feed)
+    return normalize_url(entry.url, feed.url) if entry.url.present?
 
-    expand_absolute_urls(sanitized_content, entry.url)
+    entry.enclosure_url if entry.respond_to?(:enclosure_url)
   end
 
-  def self.expand_absolute_urls(content, base_url)
-    doc = Nokogiri::HTML.fragment(content)
-    abs_re = URI::DEFAULT_PARSER.regexp[:ABS_URI]
+  def self.extract_content(entry)
+    sanitized_content = ""
 
-    [["a", "href"], ["img", "src"], ["video", "src"]].each do |tag, attr|
-      doc.css(tag).each do |node|
-        url = node.get_attribute(attr)
-        unless url =~ abs_re
-          node.set_attribute(attr, URI.join(base_url, url).to_s)
-        end
-      end
+    content = entry.content || entry.summary
+    sanitized_content = ContentSanitizer.call(content) if content
+
+    if entry.url.present?
+      expand_absolute_urls(sanitized_content, entry.url)
+    else
+      sanitized_content
     end
+  end
 
-    doc.to_html
+  def self.extract_title(entry)
+    return ContentSanitizer.call(entry.title) if entry.title.present?
+    return ContentSanitizer.call(entry.summary) if entry.summary.present?
+
+    "There isn't a title for this story"
   end
 
   def self.samples
     [
-      SampleStory.new("Darin' Fireballs", "Why you should trade your firstborn for a Retina iPad"),
-      SampleStory.new("TechKrunch", "SugarGlidr raises $1.2M Series A for Social Network for Photo Filters"),
+      SampleStory.new(
+        "Darin' Fireballs",
+        "Why you should trade your firstborn for a Retina iPad"
+      ),
+      SampleStory.new(
+        "TechKrunch",
+        "SugarGlidr raises $1.2M Series A for Social Network for Photo Filters"
+      ),
       SampleStory.new("Lambda Da Ultimate", "Flimsy types are the new hotness")
     ]
   end

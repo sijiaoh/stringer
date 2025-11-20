@@ -25,14 +25,23 @@ he:
       fields:
         feed_url: כתובת של הפיד
         submit: להוסיף
-      flash:
-        added_successfully: אנחנו הוספנו את הפיד החדש. עוד מעט תקבל עידכונים.
-        already_subscribed_error: הפיד הנ"ל כבר נמצא במעקב.
-        feed_not_found_error: לא הצלחנו למצוא את הפיד. נסה שוב.
       title: מחפש מה לקרוא?
+    create:
+      success: אנחנו הוספנו את הפיד החדש. עוד מעט תקבל עידכונים.
+      already_subscribed: הפיד הנ"ל כבר נמצא במעקב.
+      feed_not_found: לא הצלחנו למצוא את הפיד. נסה שוב.
+    edit:
+      fields:
+        feed_name: 
+        feed_url: 
+        submit: 
+      flash:
+        updated_successfully: 
     index:
       add: להוסיף
       add_some_feeds: הי, כדאי %{add} קצת פידים.
+    destroy:
+      success: הפיד נמחק.
   first_run:
     password:
       anti_social: אינו חברתי
@@ -49,7 +58,7 @@ he:
     cookies_required: 
     js_required: 
   import:
-    description: ! '%{link} את הפיד שלך מ- Google Reader ויבא אותו.'
+    description: ייבא את העדכונים שלך משירות אחר.
     export: יצוא
     fields:
       import: יבוא
@@ -60,6 +69,7 @@ he:
     back_to_work: תחזור לעבודה, בטלן!
     export: יצוא
     hey: הי!
+    import: 
     logout: יציאה
     support: תמיכה
     title: סטרינגר | עוזר ה- RSS שלך
@@ -69,6 +79,7 @@ he:
       archived_stories: סיפורים ישנים
       mark_all: סמן הכל כנקרא
       refresh: רענון
+      starred_stories: 
       view_feeds: בדוק את הפיד
     feed:
       last_fetched:
@@ -83,16 +94,22 @@ he:
       archived_stories: סיפורים ישנים
       feeds: ראה פיד
       home: חזור לסיפורים
+      starred_stories: 
     shortcuts:
       keys:
+        a: 
+        bv: תעבור לקישור של הסיפור
+        f: 
         jk: סיפור הבא/קודם
+        left: 
         m: סמן את הכל כנקרא/לא נקרא
         np: למעלה/למטה
         oenter: תפתח/תסגור את הסיפור
         or: או
         r: רענון
+        right: 
+        s: 
         shifta: סמן הכל כנקרא
-        v: תעבור לקישור של הסיפור
       title: קיצורי מקשים
     zen:
       archive: ראה את כל הפריטים
@@ -112,16 +129,24 @@ he:
       rss: RSS
       subtitle: ברוך שובך, חבר!
       title: סטרינגר עושה סדר ב
+  starred:
+    next: 
+    of: 
+    previous: 
+    sorry: 
   stories:
     keep_unread: סמן כלא נקרא
   time:
     formats:
-      default: ! '%b %d, %H:%M%'
+      default: '%b %d, %H:%M%'
   tutorial:
     add_feed: הוסף פיד
     as_read: כנקרא
     click_to_read: (לקריאה)
     description: אנחנו מחפשים סיפורים בשבילך, תן לנו קצת זמן.
+    heroku_hourly_task: 
+    heroku_one_more_thing: 
+    heroku_scheduler: 
     mark_all: סמן הכל
     ready: יפה, הכל מוכן!
     refresh: רענון

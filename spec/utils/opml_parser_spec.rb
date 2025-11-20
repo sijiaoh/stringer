@@ -1,73 +1,86 @@
-require "spec_helper"
+# frozen_string_literal: true
 
-app_require "utils/opml_parser"
+RSpec.describe OpmlParser do
+  it "returns a hash of feed details from an OPML file" do
+    result = described_class.call(<<-XML)
+      <?xml version="1.0" encoding="UTF-8"?>
+      <opml version="1.0">
+      <head>
+        <title>matt swanson subscriptions in Google Reader</title>
+      </head>
+      <body>
+        <outline text="a sample feed" title="a sample feed" type="rss"
+            xmlUrl="http://feeds.feedburner.com/foobar" htmlUrl="http://www.example.org/"/>
+        <outline text="lolol" title="Matt's Blog" type="rss"
+            xmlUrl="http://mdswanson.com/atom.xml" htmlUrl="http://mdswanson.com/"/>
+      </body>
+      </opml>
+    XML
 
-describe OpmlParser do
-  describe "#parse_feeds" do
-    it "it returns a hash of feed details from an OPML file" do
-      parser = OpmlParser.new
+    resulted_values = result.values.flatten
+    expect(resulted_values.size).to eq(2)
+    expect(resulted_values.first[:name]).to eq("a sample feed")
+    expect(resulted_values.first[:url]).to eq("http://feeds.feedburner.com/foobar")
 
-      result = parser.parse_feeds(<<-eos)
-        <?xml version="1.0" encoding="UTF-8"?>
-        <opml version="1.0">
-        <head>
-          <title>matt swanson subscriptions in Google Reader</title>
-        </head>
-        <body>
+    expect(resulted_values.last[:name]).to eq("Matt's Blog")
+    expect(resulted_values.last[:url]).to eq("http://mdswanson.com/atom.xml")
+    expect(result.keys.first).to eq("Ungrouped")
+  end
+
+  it "handles nested groups of feeds" do
+    result = described_class.call(<<-XML)
+      <?xml version="1.0" encoding="UTF-8"?>
+      <opml version="1.0">
+      <head>
+        <title>matt swanson subscriptions in Google Reader</title>
+      </head>
+      <body>
+        <outline text="Technology News">
           <outline text="a sample feed" title="a sample feed" type="rss"
               xmlUrl="http://feeds.feedburner.com/foobar" htmlUrl="http://www.example.org/"/>
-          <outline text="lolol" title="Matt's Blog" type="rss"
-              xmlUrl="http://mdswanson.com/atom.xml" htmlUrl="http://mdswanson.com/"/>
-        </body>
-        </opml>
-      eos
+        </outline>
+      </body>
+      </opml>
+    XML
+    resulted_values = result.values.flatten
 
-      result.count.should eq 2
-      result.first[:name].should eq "a sample feed"
-      result.first[:url].should eq "http://feeds.feedburner.com/foobar"
-    
-      result.last[:name].should eq "Matt's Blog"
-      result.last[:url].should eq "http://mdswanson.com/atom.xml"
-    end
+    expect(resulted_values.count).to eq(1)
+    expect(resulted_values.first[:name]).to eq("a sample feed")
+    expect(resulted_values.first[:url]).to eq("http://feeds.feedburner.com/foobar")
+    expect(result.keys.first).to eq("Technology News")
+  end
 
-    it "handles nested groups of feeds" do
-      parser = OpmlParser.new
+  it "doesn't explode when there are no feeds" do
+    result = described_class.call(<<-XML)
+      <?xml version="1.0" encoding="UTF-8"?>
+      <opml version="1.0">
+      <head>
+        <title>matt swanson subscriptions in Google Reader</title>
+      </head>
+      <body>
+      </body>
+      </opml>
+    XML
 
-      result = parser.parse_feeds(<<-eos)
-        <?xml version="1.0" encoding="UTF-8"?>
-        <opml version="1.0">
-        <head>
-          <title>matt swanson subscriptions in Google Reader</title>
-        </head>
-        <body>
-          <outline text="Technology News">
-            <outline text="a sample feed" title="a sample feed" type="rss"
-                xmlUrl="http://feeds.feedburner.com/foobar" htmlUrl="http://www.example.org/"/>
-          </outline>
-        </body>
-        </opml>
-      eos
+    expect(result).to be_empty
+  end
 
-      result.count.should eq 1
-      result.first[:name].should eq "a sample feed"
-      result.first[:url].should eq "http://feeds.feedburner.com/foobar"
-    end
+  it "handles Feedly's exported OPML (missing :title)" do
+    result = described_class.call(<<-XML)
+      <?xml version="1.0" encoding="UTF-8"?>
+      <opml version="1.0">
+      <head>
+        <title>My feeds (Feedly)</title>
+      </head>
+      <body>
+        <outline text="a sample feed" type="rss"
+            xmlUrl="http://feeds.feedburner.com/foobar" htmlUrl="http://www.example.org/"/>
+      </body>
+      </opml>
+    XML
+    resulted_values = result.values.flatten
 
-    it "doesn't explode when there are no feeds" do
-      parser = OpmlParser.new
-
-      result = parser.parse_feeds(<<-eos)
-        <?xml version="1.0" encoding="UTF-8"?>
-        <opml version="1.0">
-        <head>
-          <title>matt swanson subscriptions in Google Reader</title>
-        </head>
-        <body>
-        </body>
-        </opml>
-      eos
-
-      result.should be_empty
-    end
+    expect(resulted_values.count).to eq(1)
+    expect(resulted_values.first[:name]).to eq("a sample feed")
   end
 end

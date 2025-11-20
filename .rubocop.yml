@@ -1,0 +1,77 @@
+inherit_from: .rubocop_todo.yml
+inherit_mode: { merge: [Exclude] }
+
+plugins:
+  - rubocop-capybara
+  - rubocop-factory_bot
+  - rubocop-rails
+  - rubocop-rake
+  - rubocop-rspec
+  - rubocop-rspec_rails
+
+AllCops:
+  DisplayCopNames: true
+  EnabledByDefault: true
+  Exclude:
+    - 'db/schema.rb'
+    - 'vendor/**/*'
+
+Capybara/ClickLinkOrButtonStyle: { EnforcedStyle: link_or_button }
+Layout/LineLength: { Max: 80, Exclude: [db/migrate/*.rb] }
+Layout/RedundantLineBreak: { InspectBlocks: true }
+Metrics/AbcSize: { Exclude: [db/migrate/*.rb], CountRepeatedAttributes: false }
+Metrics/BlockLength:
+  Exclude: [config/**/*.rb, db/migrate/*.rb, spec/**/*.rb, db/seeds/**/*.rb]
+Metrics/MethodLength: { Exclude: [db/migrate/*.rb] }
+Rails/SkipsModelValidations: { AllowedMethods: [update_all] }
+RSpec/DescribeClass: { Exclude: [spec/system/**/*] }
+RSpec/MessageExpectation:
+  EnforcedStyle: expect
+  Exclude: [spec/support/matchers/**/*.rb]
+RSpec/MessageSpies: { EnforcedStyle: receive }
+RSpec/MultipleMemoizedHelpers: { AllowSubject: false, Max: 0 }
+Style/ClassAndModuleChildren: { EnforcedStyle: compact }
+Style/MethodCallWithArgsParentheses:
+  AllowedMethods:
+    - and
+    - to
+    - not_to
+    - describe
+    - require
+    - task
+  Exclude:
+    - db/**/*.rb
+Style/StringLiterals: { EnforcedStyle: double_quotes }
+Style/SymbolArray: { EnforcedStyle: brackets }
+Style/WordArray: { EnforcedStyle: brackets }
+
+# want to enable these, but they don't work right when using `.rubocop_todo.yml`
+Style/DocumentationMethod: { Enabled: false }
+Style/Documentation: { Enabled: false }
+
+################################################################################
+#
+# Rules we don't want to enable
+#
+################################################################################
+
+Bundler/GemComment: { Enabled: false }
+Bundler/GemVersion: { Enabled: false }
+Capybara/AmbiguousClick: { Enabled: false }
+Layout/SingleLineBlockChain: { Enabled: false }
+Lint/ConstantResolution: { Enabled: false }
+Rails/BulkChangeTable: { Enabled: false }
+Rails/RedundantPresenceValidationOnBelongsTo: { Enabled: false }
+RSpec/AlignLeftLetBrace: { Enabled: false }
+RSpec/AlignRightLetBrace: { Enabled: false }
+Rails/HasManyOrHasOneDependent: { Enabled: false }
+RSpec/IndexedLet: { Enabled: false }
+RSpec/StubbedMock: { Enabled: false }
+Rails/SchemaComment: { Enabled: false }
+Style/ConstantVisibility: { Enabled: false }
+Style/Copyright: { Enabled: false }
+Style/InlineComment: { Enabled: false }
+Style/MissingElse: { Enabled: false }
+Style/RequireOrder: { Enabled: false }
+Style/SafeNavigation: { Enabled: false }
+Style/StringHashKeys: { Enabled: false }

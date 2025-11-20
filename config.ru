@@ -1,13 +1,8 @@
-require "rubygems"
-require "bundler"
+# frozen_string_literal: true
 
-Bundler.require
+# This file is used by Rack-based servers to start the application.
 
-require "./fever_api"
-require "./app"
+require_relative "config/environment"
 
-map "/fever" do
-  run FeverAPI
-end
-
-run Stringer
+run Rails.application
+Rails.application.load_server

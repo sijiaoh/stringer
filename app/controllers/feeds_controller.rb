@@ -1,55 +1,64 @@
-require_relative "../repositories/feed_repository"
-require_relative "../commands/feeds/add_new_feed"
-require_relative "../commands/feeds/export_to_opml"
+# frozen_string_literal: true
 
-class Stringer < Sinatra::Base
-  get "/feeds" do
-    @feeds = FeedRepository.list
-
-    erb :'feeds/index'
+class FeedsController < ApplicationController
+  def index
+    @feeds = authorization.scope(FeedRepository.list.with_unread_stories_counts)
   end
 
-  delete "/feeds/:feed_id" do
-    FeedRepository.delete(params[:feed_id])
+  def show
+    @feed = FeedRepository.fetch(params[:feed_id])
+    authorization.check(@feed)
 
-    status 200
+    @stories = StoryRepository.feed(params[:feed_id])
+    @unread_stories = @stories.reject(&:is_read)
   end
 
-  get "/feeds/new" do
-    erb :'feeds/add'
-  end
-
-  post "/feeds" do
+  def new
+    authorization.skip
     @feed_url = params[:feed_url]
-    feed = AddNewFeed.add(@feed_url)
+  end
 
-    if feed and feed.valid?
-      FetchFeeds.enqueue([feed])
+  def edit
+    @feed = FeedRepository.fetch(params[:id])
+    authorization.check(@feed)
+  end
 
-      flash[:success] = t('feeds.add.flash.added_successfully')
-      redirect to("/")
-    elsif feed
-      flash.now[:error] = t('feeds.add.flash.already_subscribed_error')
-      erb :'feeds/add'
+  def create
+    authorization.skip
+    @feed_url = params[:feed_url]
+    feed = Feed::Create.call(@feed_url, user: current_user)
+
+    if feed && feed.valid?
+      CallableJob.perform_later(Feed::FetchOne, feed)
+
+      redirect_to("/", flash: { success: t(".success") })
     else
-      flash.now[:error] = t('feeds.add.flash.feed_not_found_error')
-      erb :'feeds/add'
+      flash.now[:error] = feed ? t(".already_subscribed") : t(".feed_not_found")
+
+      render(:new)
     end
   end
 
-  get "/feeds/import" do
-    erb :'feeds/import'
+  def update
+    feed = FeedRepository.fetch(params[:id])
+    authorization.check(feed)
+
+    FeedRepository.update_feed(
+      feed,
+      params[:feed_name],
+      params[:feed_url],
+      params[:group_id]
+    )
+
+    flash[:success] = t("feeds.edit.flash.updated_successfully")
+    redirect_to("/feeds")
   end
 
-  post "/feeds/import" do
-    ImportFromOpml.import(params["opml_file"][:tempfile].read)
+  def destroy
+    authorization.check(Feed.find(params[:id]))
+    FeedRepository.delete(params[:id])
 
-    redirect to("/setup/tutorial")
-  end
-
-  get "/feeds/export" do
-    content_type :xml
-
-    ExportToOpml.new(Feed.all).to_xml
+    flash[:success] = t(".success")
+    redirect_to("/feeds")
   end
 end
