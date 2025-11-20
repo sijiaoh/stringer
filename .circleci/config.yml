@@ -1,14 +1,14 @@
 version: 2.1
 
 orbs:
-  browser-tools: circleci/browser-tools@1.2.3
-  node: circleci/node@5.0.0
+  browser-tools: circleci/browser-tools@1.5.2
+  node: circleci/node@7.1.0
 
 jobs:
   build:
     parallelism: 1
     docker:
-      - image: cimg/ruby:3.3.0-browsers
+      - image: cimg/ruby:3.4.7-browsers
         environment:
           BUNDLE_JOBS: 3
           BUNDLE_RETRY: 3
@@ -22,8 +22,6 @@ jobs:
           POSTGRES_USER: postgres
           POSTGRES_DB: app_test
           POSTGRES_PASSWORD:
-
-    working_directory: ~/app
 
     steps:
       - checkout
@@ -47,11 +45,10 @@ jobs:
 
       - run: # Install Ruby dependencies
           name: Bundle Install
-          command: bundle check || bundle install
-
-      # - run:
-      #     name: Bundler Audit
-      #     command: bundle exec bundle audit
+          command: |
+            bundle config set --local frozen 'true'
+            bundle install
+            bundle clean
 
       - save_cache:
           key: bundle-v1-{{ checksum "Gemfile.lock" }}

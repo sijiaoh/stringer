@@ -6,10 +6,7 @@ module AccessibilityOverrides
   A11Y_SKIP = [
     "aria-required-children",
     "color-contrast",
-    "html-has-lang",
-    "label-title-only",
     "landmark-one-main",
-    "link-name",
     "page-has-heading-one",
     "region"
   ].freeze

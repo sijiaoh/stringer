@@ -1,12 +1,13 @@
 inherit_from: .rubocop_todo.yml
 inherit_mode: { merge: [Exclude] }
 
-require:
+plugins:
   - rubocop-capybara
   - rubocop-factory_bot
   - rubocop-rails
   - rubocop-rake
   - rubocop-rspec
+  - rubocop-rspec_rails
 
 AllCops:
   DisplayCopNames: true
@@ -16,12 +17,11 @@ AllCops:
     - 'vendor/**/*'
 
 Capybara/ClickLinkOrButtonStyle: { EnforcedStyle: link_or_button }
-Layout/LineLength: { Max: 80 }
+Layout/LineLength: { Max: 80, Exclude: [db/migrate/*.rb] }
 Layout/RedundantLineBreak: { InspectBlocks: true }
-Metrics/AbcSize:
-  Exclude: [db/migrate/20230305010750_create_good_jobs.rb]
-  CountRepeatedAttributes: false
-Metrics/BlockLength: { Exclude: [config/**/*.rb, spec/**/*.rb, db/seeds/**/*.rb] }
+Metrics/AbcSize: { Exclude: [db/migrate/*.rb], CountRepeatedAttributes: false }
+Metrics/BlockLength:
+  Exclude: [config/**/*.rb, db/migrate/*.rb, spec/**/*.rb, db/seeds/**/*.rb]
 Metrics/MethodLength: { Exclude: [db/migrate/*.rb] }
 Rails/SkipsModelValidations: { AllowedMethods: [update_all] }
 RSpec/DescribeClass: { Exclude: [spec/system/**/*] }
@@ -57,6 +57,7 @@ Style/Documentation: { Enabled: false }
 
 Bundler/GemComment: { Enabled: false }
 Bundler/GemVersion: { Enabled: false }
+Capybara/AmbiguousClick: { Enabled: false }
 Layout/SingleLineBlockChain: { Enabled: false }
 Lint/ConstantResolution: { Enabled: false }
 Rails/BulkChangeTable: { Enabled: false }

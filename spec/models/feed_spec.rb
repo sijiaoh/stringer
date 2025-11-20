@@ -3,7 +3,7 @@
 RSpec.describe "Feed" do
   describe ".with_unread_stories_counts" do
     it "returns feeds with unread stories counts" do
-      create(:story, :unread)
+      create(:story)
 
       feed = Feed.with_unread_stories_counts.first
 
@@ -11,7 +11,7 @@ RSpec.describe "Feed" do
     end
 
     it "includes feeds with no unread stories" do
-      create(:story)
+      create(:story, :read)
 
       feed = Feed.with_unread_stories_counts.first
 
@@ -22,7 +22,7 @@ RSpec.describe "Feed" do
   describe "#unread_stories" do
     it "returns stories where is_read is false" do
       feed = create(:feed)
-      story = create(:story, :unread, feed:)
+      story = create(:story, feed:)
 
       expect(feed.unread_stories).to eq([story])
     end
@@ -30,13 +30,6 @@ RSpec.describe "Feed" do
     it "does not return stories where is_read is true" do
       feed = create(:feed)
       create(:story, :read, feed:)
-
-      expect(feed.unread_stories).to be_empty
-    end
-
-    it "does not return stories where is_read is nil" do
-      feed = create(:feed)
-      create(:story, feed:)
 
       expect(feed.unread_stories).to be_empty
     end
@@ -82,6 +75,21 @@ RSpec.describe "Feed" do
         id: 52,
         favicon_id: 0,
         title: "chicken feed",
+        url: "wat url",
+        site_url: "wat url",
+        is_spark: 0,
+        last_updated_on_time: last_fetched.to_i
+      )
+    end
+
+    it "replaces a null title with an empty string" do
+      last_fetched = 1.day.ago
+      feed = Feed.new(id: 52, name: nil, url: "wat url", last_fetched:)
+
+      expect(feed.as_fever_json).to eq(
+        id: 52,
+        favicon_id: 0,
+        title: "",
         url: "wat url",
         site_url: "wat url",
         is_spark: 0,

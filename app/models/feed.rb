@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Feed < ApplicationRecord
-  has_many :stories, -> { order("published desc") }, dependent: :delete_all
+  has_many :stories, -> { order(published: :desc) }, dependent: :delete_all
   has_many :unread_stories, -> { unread }, class_name: "Story"
   belongs_to :group
   belongs_to :user
@@ -11,7 +11,7 @@ class Feed < ApplicationRecord
   validates :url, presence: true, uniqueness: { scope: :user_id }
   validates :user_id, presence: true
 
-  enum status: { green: 0, yellow: 1, red: 2 }
+  enum :status, { green: 0, yellow: 1, red: 2 }
 
   scope :with_unread_stories_counts,
         lambda {
@@ -30,7 +30,7 @@ class Feed < ApplicationRecord
     {
       id:,
       favicon_id: 0,
-      title: name,
+      title: name || "",
       url:,
       site_url: url,
       is_spark: 0,

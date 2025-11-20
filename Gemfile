@@ -7,17 +7,17 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem "dotenv-rails"
 
-gem "rails", "~> 7.1.0"
+gem "rails", "~> 8.1.0"
 
 gem "bcrypt"
 gem "bootsnap", require: false
 gem "feedbag"
 gem "feedjira"
-gem "good_job"
+gem "good_job", "~> 4.12.0"
 gem "httparty"
-gem "nokogiri", "~> 1.16.0"
+gem "nokogiri", "~> 1.18.0"
 gem "pg"
-gem "puma", "~> 6.4"
+gem "puma", "~> 7.0"
 gem "rack-ssl"
 gem "sass"
 gem "sprockets"
@@ -29,9 +29,12 @@ gem "will_paginate"
 
 group :development do
   gem "rubocop", require: false
+  gem "rubocop-capybara", require: false
+  gem "rubocop-factory_bot", require: false
   gem "rubocop-rails", require: false
   gem "rubocop-rake", require: false
   gem "rubocop-rspec", require: false
+  gem "rubocop-rspec_rails", require: false
   gem "web-console"
 end
 

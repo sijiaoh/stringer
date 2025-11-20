@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 RSpec.describe FeverAPI::WriteMarkFeed do
-  let(:feed_marker) { double("feed marker") }
-  let(:marker_class) { double("marker class") }
-
   def params(feed, before:)
     authorization = Authorization.new(feed.user)
 
@@ -12,7 +9,7 @@ RSpec.describe FeverAPI::WriteMarkFeed do
 
   it "marks the feed stories as read before the given timestamp" do
     feed = create(:feed)
-    story = create(:story, :unread, feed:, created_at: 1.week.ago)
+    story = create(:story, feed:, created_at: 1.week.ago)
 
     expect { described_class.call(**params(feed, before: 1.day.ago.to_i)) }
       .to change { story.reload.is_read? }.from(false).to(true)
@@ -20,7 +17,7 @@ RSpec.describe FeverAPI::WriteMarkFeed do
 
   it "does not mark the feed stories as read after the given timestamp" do
     feed = create(:feed)
-    story = create(:story, :unread, feed:)
+    story = create(:story, feed:)
 
     expect { described_class.call(**params(feed, before: 1.day.ago.to_i)) }
       .to not_change { story.reload.is_read? }.from(false)
